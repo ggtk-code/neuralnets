@@ -2,19 +2,25 @@ import numpy as np
 
 class Perceptron(object):
     """Perceptron binary classifier
+    A perceptron is a basic neural network classifier. Here are the definitions of
+    various components:
+    
+    Input: is a vector of reals, represented by X. During training, there are many 
+    different such training samples, represented by xi (i in superscript)
+    
+    Weights: Each attribute / fature in the vector is given a weight wj. w0 represents
+    the constant. 
+    
+    Net Input: This is the weighted sum of the inputs: w0 + w1x_1 + .. + wjx_j + wmx_m
 
-    A perceptron classifier (with weights w, threshold) predicts as follows:
-    1. it is given a vector x of size n -- called feature vector
-    2. It finds the dot product of w.x 
-    3. If w.x > threshold, it outputs +1, else -1
+    Activation Function: This takes the net input and transforms before final classification.
+    
+    Prediction: Takes the output of the activation funtion and produces a binary output {-1, +1}
 
-    A perceptron classifier is trained as follows:
-    1. It is given example feature vectors X and a vector of target values y
-    2. Initialize weights w, thresh to random values
-    3. Loop through each sample x and do the following
-       - find predicted y
-       - if predicted y is the same as target y, do nothing
-       - if predicted y is different, then change weights proportional to (target - predicted) 
+    Fit: Takes a bunch of training samples X and the expected outputs y, and adjusts the
+    weight vector. In a perceptron, each sample is used individually to update weights. 
+    That is: w -sample1 --> w' --sample2--> w'' --sample3--> w''' etc
+
     """
 
     # Meta params are: number of iterations, learning rate, 
@@ -34,9 +40,12 @@ class Perceptron(object):
     def Fit(self, X, y):
         nsamples = X.shape[0]
         nfeatures = X.shape[1]
+        print("X has shape " + str(np.shape(X)))
+        print("y has shape " + str(np.shape(y)))
         # Randomize 1 + nfeatures -- the extra 1 is for the constant so we can assume threshold
         # is 0
         self.w_ = np.random.RandomState().normal(loc = 0.0, scale = 0.01, size = 1 + nfeatures)
+        print("weights initialized -- shape is " + str(np.shape(self.w_)))
         self.PrintModel()
         self.Accuracy(X, y)
         self.errors_ = []
@@ -59,9 +68,16 @@ class Perceptron(object):
             self.errors_.append(errors)
         print("Training complete. Classification errors (out of " + str(nsamples) + "):")
         print(str(self.errors_))
-            
+
+    
+    def NetInput(self, X):
+        return np.dot(X, self.w_[1:]) + self.w_[0]
+
+    def Activation(self, X):
+        return self.NetInput(X)
+    
     def Predict(self, X):
-        val = np.dot(X, self.w_[1:]) + self.w_[0]
+        val = self.Activation(X)
         if val >= 0.0:
             return 1
         else:
