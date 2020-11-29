@@ -29,9 +29,9 @@ X = df.iloc[0:150, [0, 1, 2, 3]].values
 
 # Lets fit an adaline
 print("\n\n===================adaline====================")
-a = ad.Adaline(100, 0.0001) 
+a = ad.Adaline(5, 0.0001, std_features = True) 
 a.Fit(X, y)
 # print the learned model
 print("=========training done=============")
-a.PrintModel()
+a.PrintModel("final model")
 a.Accuracy(X, y)
