@@ -5,6 +5,7 @@ import perceptron as pt
 import adaline as ad
 import numpy as np
 
+# IRIS database is a good example to learn machine learning
 path = "https://archive.ics.uci.edu/ml/machine-learning-databases/iris/iris.data"
 df = pd.read_csv(path, header = None, encoding = 'utf-8')
 print(df)
